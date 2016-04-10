@@ -1,0 +1,453 @@
+	<!DOCTYPE html>
+	<html>
+	<body>
+
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.green-light_green.min.css" />
+		<!-- <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css"> -->
+		<script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+		<!-- <script src="jquery-1.12.1.js"></script> -->
+		<script src="https://code.jquery.com/jquery-2.2.1.min.js" integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
+
+		<style>
+
+			body {
+				/*margin: 10px 10px;*/
+				/*width: 90%;*/
+/*				background-color: #0ae;
+				background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
+				background-image: -moz-linear-gradient(rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
+				background-image: -o-linear-gradient(rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
+				background-image: linear-gradient(rgba(255, 255, 255, .2) 125%, transparent 50%, transparent);*/
+				/*back: ;ground-color: #E3E3E3;*/
+/*				background: linear-gradient(
+					to bottom,
+					#5d9634,
+					#5d9634 50%,
+					#538c2b 50%,
+					#538c2b
+					);
+				background-size: 100% 20px;
+				*/
+
+			}
+
+			.title {
+				width: 100%;
+				height: 40px;
+				background-color: #21242B;
+				box-shadow: 4px 4px 4px #aaaaaa;
+				color: white;
+				text-align: left;
+				/*position: absolute;*/
+			}
+
+			.titleText {
+				left: 25px;
+			}
+
+			.buttonContainer {
+				margin: 5px;
+			}
+
+			.btn {
+				margin: 5px;
+			}
+
+			.topLevelContainer {
+				margin: 30px;
+			}
+			.myWell {
+				width: 850px;
+				margin: 0 auto;
+			}
+
+			.timerCard {
+				background-color: #B9FF99;
+				width: 240px;
+				height: 143px;
+				display: inline-block;
+				margin: 5px;
+				/*box-shadow: 4px 4px 4px #aaaaaa;*/
+				border-radius: 3px;
+				float: left;
+				-webkit-transition: opacity 1s;
+				transition: opacity .5s;
+			}
+
+
+			.timerCardNew {
+				background-color: #d3d3d3;
+				width: 240px;
+				height: 143px;
+				display: inherit;
+				margin: 5px;
+				border-style: dashed;
+				/*box-shadow: 1px 1px 2px #aaaaaa;*/
+				border-radius: 3px;
+				opacity: 0.1;
+				float: left;
+				cursor: pointer;
+			}
+
+			.timerInvisible {
+				opacity: 0;
+			}
+
+			.timerVisible {
+				opacity: 1;
+			}
+
+			.timerValues {
+				/*display: block;*/
+				/*width: 250px;*/
+				margin: 0 0 0 15px;
+			}
+
+			.descInput {
+				width: 190px;
+				margin: 0 20px;
+			}
+
+			.timeInput {
+				width: 50px;
+				margin: 0 5px 0 5px;
+			}
+
+			.mdl-progress>.bufferbar {
+				background-image: linear-gradient(to right,#B9FF99,#B9FF99),linear-gradient(to right,#B9FF99, #B9FF99)	
+			}
+
+		</style>
+
+		<div class="container-fluid topLevelContainer">
+
+
+	<!-- 		<div class="title">
+				<span class="titleText">Timer</span>
+			</div> -->
+
+			<div class="buttonContainer well well-sm">
+				<button id="startButton" class="btn btn-default btn-lg btn-success btn-responsive mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" >
+					<span class="glyphicon glyphicon-play"></span> Start
+				</button>
+				<button id="pauseButton" class="btn btn-default btn-lg btn-responsive mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+					<span class="glyphicon glyphicon-pause"></span> Pause
+				</button>
+				<button id="resetButton" class="btn btn-default btn-lg btn-responsive mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+					<span class="glyphicon glyphicon-refresh"></span> Reset
+				</button>
+				<button id="saveButton" class="btn btn-default btn-lg btn-responsive mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+					<span class="glyphicon glyphicon-floppy-disk"></span> Save
+				</button>
+				<button id="restoreButton" class="btn btn-default btn-lg btn-responsive mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+					<span class="glyphicon glyphicon-floppy-save"></span> Load
+				</button>
+				<button id="jumpBack" class="btn btn-default btn-lg btn-responsive mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" disabled>
+					<span class="glyphicon glyphicon-backward"></span> Skip
+				</button>
+				<button id="jumpForward" class="btn btn-default btn-lg btn-responsive mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" disabled>
+					<span class="glyphicon glyphicon-forward"></span> Skip
+				</button>
+	<!-- 			<button id="newButton" class="btn btn-default btn-lg btn-responsive">
+					<span class="glyphicon glyphicon-plus"></span> New Timer
+				</button> -->
+			</div>
+
+
+
+
+			<div id="timer-template" hidden>
+				<div class="timerCard mdl-shadow--6dp">
+					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label descInput">
+						<input class="desc mdl-textfield__input" type="text" id="sample1">
+						<label class="mdl-textfield__label" for="sample1">Timer description</label>
+					</div>
+					<div class="timerValues">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label timeInput">
+							<input class="inHr mdl-textfield__input" type="text" id="sample1">
+							<label class="mdl-textfield__label" for="sample1">hour</label>
+						</div>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label timeInput">
+							<input class="inMin mdl-textfield__input" type="text" id="sample1">
+							<label class="mdl-textfield__label" for="sample1">min</label>
+						</div>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label timeInput">
+							<input class="inSec mdl-textfield__input" type="text" id="sample1">
+							<label class="mdl-textfield__label" for="sample1">sec</label>
+						</div>
+					</div>
+					<div id="p1" class="mdl-progress mdl-js-progress"></div>
+				</div>
+			</div>
+
+			<div id="timer-container" >
+				<div class="timer0 timerCard mdl-shadow--6dp">
+					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label 	descInput">
+						<input class="desc mdl-textfield__input" type="text" id="sample2">
+						<label class="mdl-textfield__label" for="sample2">Timer description</label>
+					</div>
+					<div class="timerValues">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label timeInput">
+							<input class="inHr mdl-textfield__input" type="text" id="sample3">
+							<label class="mdl-textfield__label" for="sample3">hour</label>
+						</div>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label timeInput">
+							<input class="inMin mdl-textfield__input" type="text" id="sample4">
+							<label class="mdl-textfield__label" for="sample4">min</label>
+						</div>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label timeInput">
+							<input class="inSec mdl-textfield__input" type="text" id="sample5">
+							<label class="mdl-textfield__label" for="sample5">sec</label>
+						</div>
+					</div>
+					<div id="p1" class="mdl-progress mdl-js-progress"></div>
+				</div>
+			</div>
+
+			<div class="timerCardNew">
+				<div style="margin: 0px auto;">
+					<i class="material-icons" style="font-size: 60px; margin: 40px 90px;">add_circle</i>
+				</div>
+			</div>
+		</div>
+
+
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				document.querySelector('#p1').addEventListener('mdl-componentupgraded', function() {
+					this.MaterialProgress.setProgress(44);
+				});
+
+				var audio = new Audio('http://soundbible.com/mp3/Loud_Alarm_Clock_Buzzer-Muk1984-493547174.mp3');
+				var timers = [];
+				timers[0] = new TimerObj();
+				var nextTimer = 0;
+				var intervalVar;
+				var timerState = "Stopped";
+				var template = $("#timer-template").html();
+
+				$(".timerCardNew").click(function() {
+					addNewTimer();
+				});
+
+				var addNewTimer = function() {
+					$("#timer-container").append(template);
+					$("#timer-container>div:last").addClass('timerInvisible timer' + (timers.length));
+					getComputedStyle(document.getElementById('timer-template')).opacity;
+					$("#timer-container>div:last").addClass('timerVisible');
+					var newElement = $("#timer-container>div:last");
+					componentHandler.upgradeDom();
+					timers[timers.length] = new TimerObj();
+				};
+
+				var removeAllTimers = function() {
+					if (timerState == "Active") {
+						timers[nextTimer].pauseTimer();
+					}
+					timerState = "Stopped";
+					$(".timer0 .inSec").val(0).parent().addClass('is-focused');
+					$(".timer0 .inMin").val(0).parent().addClass('is-focused');
+					$(".timer0 .inHr").val(0).parent().addClass('is-focused');
+					$(".timer0 .desc").val("");
+					$(".timer0 .progress .progress-bar").attr('aria-valuemax', 0);
+					$(".timer0 .progress .progress-bar").attr('aria-valuemin', 0);
+					$(".timer0 .progress .progress-bar").attr('aria-valuenow', 0);
+					$(".timer0 .progress .progress-bar").attr('style', "width: 0%");
+
+					for (var i = 1; i < timers.length; i++) {
+						$(".timer"+i+" .inSec").val(0);
+						$(".timer"+i+" .inMin").val(0);
+						$(".timer"+i+" .inHr").val(0);
+						$(".timer"+i+" .desc").val("");
+						$(".timer" + i).remove();
+					}
+					timers = [];
+					timers[0] = new TimerObj();
+					nextTimer = 0;
+				}
+
+				$("#startButton").click(function() {
+					$("#pauseButton").prop('disabled', false);
+					$("#resetButton").prop('disabled', false);
+					$("#startButton").prop('disabled', true);
+					$("#jumpForward").prop('disabled', false);
+					$("#jumpBack").prop('disabled', false);
+					timerState = "Active";
+					initializeNewTimer();
+				});
+
+
+				$("#pauseButton").click(function() {
+					if (timerState === "Active") {
+						$("#pauseButton").html('<span class="glyphicon glyphicon-play"></span> Resume');
+						timerState = "Stopped";
+						timers[nextTimer].pauseTimer();
+					} else {
+						$("#pauseButton").html('<span class="glyphicon glyphicon-pause"></span> Pause');
+						timerState = "Active";
+						timers[nextTimer].startTimer();
+					}
+
+				});
+
+				$("#resetButton").click(function() {
+					$("#startButton").prop('disabled', false);
+					$("#pauseButton").prop('disabled', true);
+					$("#resetButton").prop('disabled', true);
+					$("#jumpForward").prop('disabled', true);
+					$("#jumpBack").prop('disabled', true);
+					removeAllTimers();
+				});
+
+				$("#saveButton").click(function() {
+					if (typeof(Storage) !== "undefined") {
+						storeTimers = [];
+						for (var i = 0; i < timers.length; i++) {
+							var valTimer = {
+								'seconds': parseInt($(".timer"+i+" .inSec").val()),
+								'minutes': parseInt($(".timer"+i+" .inMin").val()),
+								'hours': parseInt($(".timer"+i+" .inHr").val()),
+								'desc': $(".timer"+i+" .desc").val()
+							};
+							storeTimers[i] = valTimer;
+						}
+						localStorage.setItem("timerValues", JSON.stringify(storeTimers));
+					} else {
+						alert("Sorry your browser is not supported for save function.")
+					}
+				});
+
+				$("#restoreButton").click(function() {
+					removeAllTimers();
+					if (typeof(Storage) !== "undefined") {
+						var tempTimers = JSON.parse(localStorage.getItem("timerValues"));
+						for (var i = 0; i < tempTimers.length; i++) {
+							if ($(".timer"+ i + " .inSec").length == 0 ) {
+								addNewTimer();
+							}
+							$(".timer" + i + " .inSec").val(tempTimers[i].seconds).parent().addClass('is-focused');
+							$(".timer" + i + " .inMin").val(tempTimers[i].minutes).parent().addClass('is-focused');
+							$(".timer" + i + " .inHr").val(tempTimers[i].hours).parent().addClass('is-focused');
+							$(".timer" + i + " .desc").val(tempTimers[i].desc).parent().addClass('is-focused');
+						};
+					} else {
+						alert("Sorry your browser is not supported for save function.")
+					}
+					$("#resetButton").prop('disabled', false);
+				});
+
+				$("#jumpForward").click(function() {
+					timers[nextTimer].pauseTimer();
+					if (timers.length > nextTimer + 1) {
+						nextTimer += 1;
+						initializeNewTimer();
+					}
+				});
+
+				$("#jumpBack").click(function() {
+					timers[nextTimer].pauseTimer();
+					nextTimer -= 1;
+					initializeNewTimer();
+				});
+
+				var initializeNewTimer = function() {
+					var sec = ($(".timer"+nextTimer+" .inSec").val());
+					var min = ($(".timer"+nextTimer+" .inMin").val());
+					var hr = ($(".timer"+nextTimer+" .inHr").val());
+					var desc = $(".timer"  + nextTimer + " .desc").val();
+					sec = (sec == "") ? 0 : parseInt(sec);
+					min = (min == "") ? 0 : parseInt(min);
+					hr = (hr == "") ? 0 : parseInt(hr);
+					console.log("in initializeNewTimer: value of seconds" + sec);	
+					timers[nextTimer].setTime(sec, min, hr, desc);
+					timers[nextTimer].startTimer();
+				}
+
+				function TimerObj() {
+					this.sec;
+					this.min;
+					this.hr;
+					this.desc;
+					this.totalSeconds;
+					this.timerVar;
+					this.maxVal;
+
+					var self = this;
+
+					this.setTime = function(sec, min, hr, desc) {
+						this.sec = sec;
+						this.min = min;
+						this.hr = hr;
+						this.desc = desc
+						this.maxVal = this.sec + (60 * this.min) + ( 60 * 60 * this.hr);
+					}
+
+					this.getTimeInSeconds = function() {
+						console.log("in getTimeInSeconds");
+						this.totalSeconds = this.sec + (60 * this.min) + ( 60 * 60 * this.hr);
+						console.log("in getTimeInSeconds " + this.totalSeconds);
+						// $(".timer" + nextTimer + " .progress .progress-bar").attr('aria-valuemax', this.maxVal);
+					}
+
+					this.getTimeFromSeconds = function() {
+						console.log("In getTimeFromSeconds function.");
+						this.sec = Math.floor(this.totalSeconds % 60);
+						this.min = Math.floor(this.totalSeconds / 60 % 60);
+						this.hr = Math.floor(this.totalSeconds / 3600);
+						$(".timer" + nextTimer + " .inSec").val(this.sec).parent().addClass('is-focused');
+						$(".timer" + nextTimer + " .inMin").val(this.min).parent().addClass('is-focused');
+						$(".timer" + nextTimer + " .inHr").val(this.hr).parent().addClass('is-focused');
+						$(".timer" + nextTimer + ">.mdl-progress>.progressbar").attr("style", "width: " + (100 - (this.totalSeconds * 100) / this.maxVal) + "%");
+					}
+
+					this.startTimer = function() {
+						console.log("In startTimer function.");
+						this.getTimeInSeconds();
+						if(this.totalSeconds > 0) {
+							//intervalVar = setInterval(timerLooper, 1000);
+							this.timerVar = setInterval(timerLooper, 1000);
+						}
+					}
+
+					var timerLooper = function() {
+						console.log("in timerLooper");
+						self.totalSeconds -= 1;
+						self.getTimeFromSeconds();
+						if (parseInt(self.totalSeconds) == 0) {
+							self.stopTimer();
+						}
+					}
+
+					this.stopTimer = function() {
+						console.log("In stopTimer function.");
+						//clearInterval(intervalVar);
+						audio.play();
+						setTimeout(function() { audio.pause();}, 3000);
+						clearInterval(self.timerVar);
+						nextTimer += 1;
+						if (timers.length > nextTimer) {
+							initializeNewTimer();
+						} else {
+							timerState = "Stopped";
+						}
+					}
+
+					this.pauseTimer = function() {
+						//clearInterval(intervalVar);
+						console.log("In pauseTimer function");
+						clearInterval(this.timerVar);
+					}
+
+					this.resumeTimer = function() {
+						this.startTimer();
+					}
+
+				}
+
+			});
+
+		</script>
+	</body>
+	</html>
